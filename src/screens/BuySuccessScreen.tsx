@@ -2,30 +2,37 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import LottieView from "lottie-react-native";
 import { appInfo } from "../constants/appInfos";
+import ButtonComponent from "../components/button/ButtonComponent";
 
-const MenuScreen = () => {
+const BuySuccessScreen = ({navigation}:any) => {
   return (
     <View
       style={{
         flex: 1,
         justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
       }}
     >
       <LottieView
         autoPlay
         loop
         style={{
+          marginTop: 0,
           width: appInfo.sizes.WIDTH * 1,
-          height: appInfo.sizes.HEIGHT * 1,
+          height: appInfo.sizes.HEIGHT * 0.8,
           backgroundColor: "transparent",
         }}
-        // Find more Lottie files at https://lottiefiles.com/featured
-        source={require("../assets/animations/nosupport.json")}
+        source={require("../assets/animations/Sucess.json")}
       />
+      <ButtonComponent
+      
+      onPress={() => navigation.navigate("Explore")}
+      type="primary" text="Go Home for continue Shopping" />
     </View>
   );
 };
 
-export default MenuScreen;
+export default BuySuccessScreen;
 
 const styles = StyleSheet.create({});

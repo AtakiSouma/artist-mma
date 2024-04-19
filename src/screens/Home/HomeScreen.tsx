@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import ButtonComponent from "../../components/button/ButtonComponent";
 import AsyncStorage, {
   useAsyncStorage,
@@ -11,9 +11,12 @@ import { globalStyles } from "../../style/globalStyles";
 import { StatusBar } from "expo-status-bar";
 import { appColors } from "../../constants/appColors";
 import {
+  FlatList,
   GestureHandlerRootView,
+  ScrollView,
   TouchableOpacity,
 } from "react-native-gesture-handler";
+import { useFocusEffect } from "@react-navigation/native";
 
 import {
   SimpleLineIcons,
@@ -28,21 +31,65 @@ import SpaceComponent from "../../components/Global/SpaceComponent.";
 import TagComponent from "../../components/Global/TagComponent";
 import CategoriesList from "../../components/Categories/CategoriesList";
 import Slider from "../../components/Categories/Slider";
-const HomeScreen = ({ navigation }: any) => {
-  const dispatch = useAppDispatch();
-  const handleLogout = async () => {
-    await GoogleSignin.signOut();
-    await AsyncStorage.removeItem("auth");
+import TabBarComponent from "../../components/Global/TabBarComponent";
+import WatchData, { WatchProps, feedBackData } from "../../data/watch";
+import CardItem from "../../components/CardItem";
+import Toast from "react-native-toast-message";
+import { showInfoToast, showSuccessToast } from "../../util/toast";
 
-    dispatch(removeAuth());
-  };
-  const { getItem } = useAsyncStorage("auth");
+const HomeScreen = ({ navigation }: any) => {
+  const data: WatchProps[] = WatchData;
+
+  // const calculateRateCount = (rate: number) => {
+  //   return feedbacks.filter((feedback) => feedback.rate === rate).length;
+  // };
   const auth = useAppSelector((state) => state.auth);
-  console.log(auth.currentUser.name);
   if (!auth.currentUser.name) {
     return <></>;
   }
-  console.log(auth.currentUser);
+  useEffect(() => {
+    AsyncStorage.getItem("bookmarks").then((value) => {
+      if (value !== null) {
+        const bookmarksArray = JSON.parse(value);
+        console.log(bookmarksArray);
+      }
+    });
+  }, []);
+  // TODO:Step:1: Initialize bookmarks
+  const [bookmarks, setBookmarks] = useState<string[]>([]);
+  console.log(bookmarks);
+  useFocusEffect(
+    React.useCallback(() => {
+      AsyncStorage.getItem("bookmarks")
+        .then((value) => {
+          if (value !== null) {
+            const bookmarksArray = JSON.parse(value);
+            setBookmarks(bookmarksArray);
+          } else {
+            setBookmarks([]);
+          }
+        })
+        .catch((error) => console.error("Error retrieving bookmarks: ", error));
+    }, [])
+  );
+
+  // TODO:Step 2: Toggle bookmark status
+  const [isBookmarked, setIsBookMarked] = useState(true);
+  const handleToggleBookMark = (itemId: string) => {
+    const updatedBookmarks = [...bookmarks];
+    const index = updatedBookmarks.indexOf(itemId);
+    if (index !== -1) {
+      updatedBookmarks.splice(index, 1);
+      showInfoToast();
+      // Remove from bookmarks
+    } else {
+      updatedBookmarks.push(itemId);
+      showSuccessToast(); // Add to bookmarks
+    }
+    setBookmarks(updatedBookmarks);
+    AsyncStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
+  };
+
   return (
     <View style={globalStyles.container}>
       <StatusBar style="light" />
@@ -118,7 +165,7 @@ const HomeScreen = ({ navigation }: any) => {
             </RowComponents>
             <TagComponent
               onPress={() =>
-                navigation.navigate("SearchEvents", {
+                navigation.navigate("FilterScreen", {
                   isFilter: true,
                 })
               }
@@ -135,16 +182,69 @@ const HomeScreen = ({ navigation }: any) => {
               }
             />
           </RowComponents>
-          <SpaceComponent height={20} />
-        </View>
-        <View>
-          <CategoriesList isFill />
         </View>
       </View>
-      <View style={{ marginTop: 10 }}>
-        <Slider />
-      </View>
-    
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          flex: 1,
+          marginTop: 18,
+        }}
+      >
+        <View style={{ marginTop: 10, marginBottom: 10 }}>
+          <Slider />
+        </View>
+
+        <TabBarComponent title="Popular Watch" onPress={() => {}} />
+        {/* popular */}
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={data.filter((item) => item.isPopular)}
+          renderItem={({ item, index }) => (
+            <CardItem
+              type="card"
+              item={item}
+              key={item.id}
+              isBookmarked={bookmarks.includes(item.id)}
+              handleToggleBookMark={handleToggleBookMark}
+              setIsBookmarked={setIsBookMarked}
+            />
+          )}
+        />
+        <TabBarComponent title="Automatic Watch" onPress={() => {}} />
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={data.filter((item) => item.automatic)}
+          renderItem={({ item, index }) => (
+            <CardItem
+              type="card"
+              item={item}
+              key={item.id}
+              isBookmarked={bookmarks.includes(item.id)}
+              handleToggleBookMark={handleToggleBookMark}
+              setIsBookmarked={setIsBookMarked}
+            />
+          )}
+        />
+        <TabBarComponent title="All Watch" onPress={() => {}} />
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={data}
+          renderItem={({ item, index }) => (
+            <CardItem
+              type="card"
+              item={item}
+              key={item.id}
+              isBookmarked={bookmarks.includes(item.id)}
+              handleToggleBookMark={handleToggleBookMark}
+              setIsBookmarked={setIsBookMarked}
+            />
+          )}
+        />
+      </ScrollView>
     </View>
   );
 };
@@ -154,7 +254,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   ContainerStyle: {
     backgroundColor: appColors.primary,
-    height: 178,
+    height: 160,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     paddingTop: 20,

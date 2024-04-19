@@ -6,7 +6,7 @@ import { appColors } from '../../constants/appColors';
 
 
 interface Props {
-  text: string;
+  text: string | number; 
   color?: string;
   size?: number;
   flex?: number;

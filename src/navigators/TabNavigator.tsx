@@ -7,6 +7,7 @@ import {
   AntDesign,
   FontAwesome5,
   FontAwesome,
+  Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import CircleComponent from "../components/Global/CircleComponent";
@@ -44,10 +45,8 @@ const TabNavigator = () => {
             case "Wishlist":
               icon = <FontAwesome name="heart" size={size} color={color} />;
               break;
-            case "Cart":
-              icon = (
-                <FontAwesome5 name="shopping-cart" size={size} color={color} />
-              );
+            case "Automatic":
+              icon = <Ionicons name="watch" size={size} color={color} />;
               break;
             case "Profile":
               icon = <FontAwesome name="user" size={size} color={color} />;
@@ -90,7 +89,7 @@ const TabNavigator = () => {
       <Tab.Screen name="Explore" component={HomeScreen} />
       <Tab.Screen name="Wishlist" component={WishListScreen} />
       <Tab.Screen name="Menu" component={MenuScreen} />
-      <Tab.Screen name="Cart" component={CartScreen} />
+      <Tab.Screen name="Automatic" component={CartScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

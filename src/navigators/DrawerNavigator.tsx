@@ -3,6 +3,8 @@ import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import TabNavigator from "./TabNavigator";
 import CustomDrawer from "../components/CustomDrawer";
+import FilterScreen from "../screens/FilterScreen";
+import DetailsScreen from "../screens/DetailsScreen";
 
 const DrawerNavigator = () => {
   const Drawer = createDrawerNavigator();
@@ -13,9 +15,10 @@ const DrawerNavigator = () => {
         headerShown: false,
         drawerPosition: "left",
       }}
-      drawerContent={props => <CustomDrawer {...props}/>}
+      drawerContent={(props) => <CustomDrawer {...props} />}
     >
       <Drawer.Screen name="TabNavigator" component={TabNavigator} />
+      
     </Drawer.Navigator>
   );
 };

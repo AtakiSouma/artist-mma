@@ -24,6 +24,8 @@ interface Props {
   multiline?: boolean;
   numberOfLine?: number;
   styles?: StyleProp<ViewStyle>;
+  divider?: boolean;
+
 }
 
 const InputComponent = (props: Props) => {
@@ -40,6 +42,7 @@ const InputComponent = (props: Props) => {
     multiline,
     numberOfLine,
     styles,
+    divider,
   } = props;
 
   const [isShowPass, setIsShowPass] = useState(isPassword ?? false);
@@ -48,6 +51,20 @@ const InputComponent = (props: Props) => {
     <View style={[globalStyles.inputContainer, styles]}>
       {/* if have suffix -? suffix = suffix */}
       {affix ?? affix}
+      {divider ? (
+        <>
+          <View
+            style={{
+              borderWidth: 0.5,
+              borderColor: appColors.primary,
+              height: "100%",
+              marginLeft: 10,
+            }}
+          ></View>
+        </>
+      ) : (
+        <></>
+      )}
       <TextInput
         style={[
           globalStyles.input,
@@ -67,7 +84,9 @@ const InputComponent = (props: Props) => {
         keyboardType={type ?? "default"}
         autoCapitalize="none"
         onEndEditing={onEnd}
+        
       />
+
       {suffix ?? suffix}
       <TouchableOpacity
         onPress={

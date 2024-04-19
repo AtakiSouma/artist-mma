@@ -17,6 +17,16 @@ const image = {
 const SplashScreen = () => {
   return (
     <View style={styles.container}>
+      <Image 
+      source={{uri:"https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i2nEtFZqb01I/v0/-1x-1.jpg"}}
+      style={{
+        width:410,
+        height:410
+
+      }}
+      resizeMethod="auto"
+      resizeMode="cover"
+      />
       <ActivityIndicator color={appColors.primary} size={80} animating={true} />
     </View>
   );
@@ -30,5 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
+    backgroundColor:"#fff",
+    marginBottom:300,
   },
 });

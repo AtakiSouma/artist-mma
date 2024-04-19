@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./slide/authSlice";
+import bookmarkSlice from "./slide/addWish";
 
 export const store = configureStore({
   reducer: {
     auth: authSlice,
+    bookmark:bookmarkSlice.reducer
   },
 });
 

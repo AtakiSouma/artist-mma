@@ -5,6 +5,7 @@ import TabNavigator from "./TabNavigator";
 import CustomDrawer from "../components/CustomDrawer";
 import FilterScreen from "../screens/FilterScreen";
 import DetailsScreen from "../screens/DetailsScreen";
+import DetailCourseScreen from "../screens/DetailCourseScreen";
 
 const DrawerNavigator = () => {
   const Drawer = createDrawerNavigator();
@@ -18,7 +19,8 @@ const DrawerNavigator = () => {
       drawerContent={(props) => <CustomDrawer {...props} />}
     >
       <Drawer.Screen name="TabNavigator" component={TabNavigator} />
-      
+      <Drawer.Screen name="DetailCourseScreen" component={DetailCourseScreen} />
+
     </Drawer.Navigator>
   );
 };

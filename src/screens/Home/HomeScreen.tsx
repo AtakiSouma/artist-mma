@@ -36,6 +36,11 @@ import WatchData, { WatchProps, feedBackData } from "../../data/watch";
 import CardItem from "../../components/CardItem";
 import Toast from "react-native-toast-message";
 import { showInfoToast, showSuccessToast } from "../../util/toast";
+import agent from "../../api/agent";
+import baseApi from "../../api/baseApi";
+import apiJWT from "../../api/apiJWT";
+import courseApi from "../../api/courseApi";
+import CardCourse from "../../components/Card/CardCourse";
 
 const HomeScreen = ({ navigation }: any) => {
   const data: WatchProps[] = WatchData;
@@ -90,6 +95,21 @@ const HomeScreen = ({ navigation }: any) => {
     AsyncStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
   };
 
+  // TODO:handle get course
+  const [courseData, setCourseData] = useState<any>();
+
+  const getAllCourse = async () => {
+    const api = "/get-all-courses";
+    try {
+      const course = await courseApi.HandleEvent(api, {}, "get");
+      setCourseData(course.data);
+    } catch (error) {}
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      getAllCourse();
+    }, [])
+  );
   return (
     <View style={globalStyles.container}>
       <StatusBar style="light" />
@@ -212,37 +232,13 @@ const HomeScreen = ({ navigation }: any) => {
             />
           )}
         />
-        <TabBarComponent title="Automatic Watch" onPress={() => {}} />
+        <TabBarComponent title="All Courses" onPress={() => {}} />
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
-          data={data.filter((item) => item.automatic)}
-          renderItem={({ item, index }) => (
-            <CardItem
-              type="card"
-              item={item}
-              key={item.id}
-              isBookmarked={bookmarks.includes(item.id)}
-              handleToggleBookMark={handleToggleBookMark}
-              setIsBookmarked={setIsBookMarked}
-            />
-          )}
-        />
-        <TabBarComponent title="All Watch" onPress={() => {}} />
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={data}
-          renderItem={({ item, index }) => (
-            <CardItem
-              type="card"
-              item={item}
-              key={item.id}
-              isBookmarked={bookmarks.includes(item.id)}
-              handleToggleBookMark={handleToggleBookMark}
-              setIsBookmarked={setIsBookMarked}
-            />
-          )}
+          data={courseData}
+          renderItem={({ item, index }) => <CardCourse item={item} />
+        }
         />
       </ScrollView>
     </View>

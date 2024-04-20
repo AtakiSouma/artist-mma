@@ -13,7 +13,7 @@ const AppRouter = () => {
   const auth = useAppSelector((state) => state.auth);
   const checkLogin = async () => {
     const res = await getItem();
-    console.log("res", res);
+    console.log("response from Async storage", res);
     if (res) {
       const parsedRes = JSON.parse(res.toString());
       dispatch(loginSuccessAddAuth(parsedRes));
@@ -26,16 +26,13 @@ const AppRouter = () => {
     const timeout = setTimeout(() => {
       setIsShowSplash(false);
     }, 2000);
-    console.log("status", isShowSplash);
-
     return () => clearTimeout(timeout);
   }, []);
-  console.log("auth",auth.currentUser);
   return (
     <>
       {isShowSplash ? (
         <SplashScreen />
-      ) : auth.currentUser.email ? (
+      ) : auth ? (
         <MainNavigator />
       ) : (
         <AuthNavigator />

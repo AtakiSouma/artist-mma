@@ -16,6 +16,8 @@ const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRemember, setIsRemember] = useState(true);
+
+  
   const handleLogin = () => {};
   return (
     <ContainerComponent isImageBackground isScroll>

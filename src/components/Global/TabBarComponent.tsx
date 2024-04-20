@@ -16,7 +16,7 @@ const TabBarComponent = (props: Props) => {
   return (
     <RowComponents
       styles={{
-        marginBottom: 20,
+        marginBottom: 10,
         paddingHorizontal: 16,
       }}
     >

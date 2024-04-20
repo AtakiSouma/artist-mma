@@ -16,6 +16,7 @@ import {
   loginStart,
   loginSuccessAddAuth,
 } from "../../../redux/slide/authSlice";
+import authenticationAPI from "../../../api/authApi";
 const SocialLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
@@ -41,8 +42,14 @@ const SocialLogin = () => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const user: CurrentUser = userInfo.user;
-      dispatch(loginSuccessAddAuth(user));
-      await AsyncStorage.setItem("auth", JSON.stringify(user));
+      const api = "/google-signin";
+      const res: any = await authenticationAPI.HandleAuthentication(
+        api,
+        user,
+        "post"
+      );   
+      dispatch(loginSuccessAddAuth(res.data));
+       await AsyncStorage.setItem("auth", JSON.stringify(res.data));
       setIsLoading(false);
       console.log("userinfo", userInfo);
     } catch (error) {

@@ -16,6 +16,8 @@ import {
 } from "@expo/vector-icons";
 import TextComponent from "../Global/TextComponent";
 import SpaceComponent from "../Global/SpaceComponent.";
+import * as Progress from "react-native-progress";
+
 interface Props {
   item: Course;
   //   item: any;
@@ -25,7 +27,7 @@ interface Props {
   setIsBookmarked?: (value: boolean) => void;
   handleToggleBookMark?: any;
 }
-const CardCourse = (props: Props) => {
+const CardProcessing = (props: Props) => {
   const navigation: any = useNavigation();
   const {
     item,
@@ -102,19 +104,21 @@ const CardCourse = (props: Props) => {
 
             <TextComponent text={"Chapter"} size={13} color={appColors.gray} />
           </RowComponents>
-          <TextComponent
-            text={`${item.price} $`}
-            color={appColors.primary}
-            styles={{ fontWeight: "800" }}
-            size={18}
-          />
         </RowComponents>
+        <View style={{ marginTop: 2, marginLeft: 2 }}>
+          <Progress.Bar
+            progress={0}
+            width={250}
+            borderColor={appColors.buttonSecondary}
+            color={appColors.primary}
+          />
+        </View>
       </View>
     </CardComponents>
   );
 };
 
-export default CardCourse;
+export default CardProcessing;
 
 const styles = StyleSheet.create({
   iconBook: {

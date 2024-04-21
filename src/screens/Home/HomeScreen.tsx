@@ -41,13 +41,14 @@ import baseApi from "../../api/baseApi";
 import apiJWT from "../../api/apiJWT";
 import courseApi from "../../api/courseApi";
 import CardCourse from "../../components/Card/CardCourse";
+import InstructorData, { InstructorProps } from "../../data/instructos";
+import { isAnimationTerminatingCalculation } from "react-native-reanimated/lib/typescript/reanimated2/animation/springUtils";
+import InstructorsCard from "../../components/InstructorsCard";
+import CardProcessing from "../../components/Card/CardProcessing";
 
 const HomeScreen = ({ navigation }: any) => {
-  const data: WatchProps[] = WatchData;
-
-  // const calculateRateCount = (rate: number) => {
-  //   return feedbacks.filter((feedback) => feedback.rate === rate).length;
-  // };
+  // const data: WatchProps[] = WatchData;
+  const instructorData: InstructorProps[] = InstructorData;
   const auth = useAppSelector((state) => state.auth);
   if (!auth.currentUser.name) {
     return <></>;
@@ -97,7 +98,7 @@ const HomeScreen = ({ navigation }: any) => {
 
   // TODO:handle get course
   const [courseData, setCourseData] = useState<any>();
-
+  const [courseBought, setCourseBought] = useState<any>();
   const getAllCourse = async () => {
     const api = "/get-all-courses";
     try {
@@ -105,10 +106,18 @@ const HomeScreen = ({ navigation }: any) => {
       setCourseData(course.data);
     } catch (error) {}
   };
+  const getAllCourseBoughtByUser = async () => {
+    const api = `/get-all/bought/${auth.currentUser.id}`;
+    try {
+      const courseBought = await courseApi.HandleEvent(api, {}, "get");
+      setCourseBought(courseBought.data);
+    } catch (error) {}
+  };
   useFocusEffect(
     React.useCallback(() => {
+      getAllCourseBoughtByUser();
       getAllCourse();
-    }, [])
+    }, [setCourseData, setCourseBought])
   );
   return (
     <View style={globalStyles.container}>
@@ -215,9 +224,9 @@ const HomeScreen = ({ navigation }: any) => {
           <Slider />
         </View>
 
-        <TabBarComponent title="Popular Watch" onPress={() => {}} />
+        <TabBarComponent title="Your Course Processing" onPress={() => {}} />
         {/* popular */}
-        <FlatList
+        {/* <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
           data={data.filter((item) => item.isPopular)}
@@ -231,14 +240,28 @@ const HomeScreen = ({ navigation }: any) => {
               setIsBookmarked={setIsBookMarked}
             />
           )}
+        /> */}
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={courseBought}
+          renderItem={({ item, index }) => <CardProcessing item={item} />}
         />
         <TabBarComponent title="All Courses" onPress={() => {}} />
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
           data={courseData}
-          renderItem={({ item, index }) => <CardCourse item={item} />
-        }
+          renderItem={({ item, index }) => <CardCourse item={item} />}
+        />
+        <TabBarComponent title="Our Instructors" onPress={() => {}} />
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={instructorData}
+          renderItem={({ item, index }) => (
+            <InstructorsCard instructor={item} />
+          )}
         />
       </ScrollView>
     </View>

@@ -5,16 +5,16 @@ import { AntDesign, Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { appColors } from "../constants/appColors";
 type Props = {
-    openDrawer?:any
-  }
+  openDrawer?: any;
+  goBack?: any;
+};
 const HeaderDetailScreen = (props: Props) => {
-    const {openDrawer} = props
-  const navigation: any = useNavigation();
+  const { openDrawer, goBack } = props;
   return (
-    <View style={{marginTop:30 , marginHorizontal:20 , paddingBottom:5}}>
+    <View style={{ marginTop: 30, marginHorizontal: 20, paddingBottom: 5 }}>
       <RowComponents justify="space-between">
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={goBack}
           style={{
             width: 48,
             height: 48,

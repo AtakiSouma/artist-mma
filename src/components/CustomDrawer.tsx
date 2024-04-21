@@ -33,8 +33,7 @@ const CustomDrawer = ({ navigation }: any) => {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem("auth");
-    // await GoogleSignin.signOut();
-
+    await GoogleSignin.signOut();
     dispatch(removeAuth());
   };
   if (!auth.currentUser.photo) {

@@ -6,6 +6,12 @@ import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { useAppDispatch, useAppSelector } from "../redux/hook";
 import { loginSuccessAddAuth } from "../redux/slide/authSlice";
 import MainNavigator from "./MainNavigator";
+import userApi from "../api/userApi";
+import {
+  getUserInfoFailure,
+  getUserInfoStart,
+  getUserInfoSuccessAddAuth,
+} from "../redux/slide/userSlice";
 
 const AppRouter = () => {
   const { getItem } = useAsyncStorage("auth");
@@ -28,11 +34,13 @@ const AppRouter = () => {
     }, 2000);
     return () => clearTimeout(timeout);
   }, []);
+  
+console.log("auth" , auth)
   return (
     <>
       {isShowSplash ? (
         <SplashScreen />
-      ) : auth ? (
+      ) : auth.currentUser.email ? (
         <MainNavigator />
       ) : (
         <AuthNavigator />

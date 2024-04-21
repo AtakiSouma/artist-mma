@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, TouchableOpacityBase, View } from "react-native";
 import React, { useState } from "react";
 import TextComponent from "./Global/TextComponent";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
 import { appColors } from "../constants/appColors";
 type Props = {
   description: string;

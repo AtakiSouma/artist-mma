@@ -12,17 +12,17 @@ const sliders: SliderList[] = [
   {
     id: "1",
     image:
-      "https://res.cloudinary.com/didw3mt8i/image/upload/v1713191514/Screenshot_2024-04-15_213109_elipiu.png",
+      "https://img.freepik.com/premium-photo/art-child-frame-with-laptop-empty-paper-supplies-making-creative_494619-306.jpg?size=626&ext=jpg",
   },
   {
     id: "2",
     image:
-      "https://res.cloudinary.com/didw3mt8i/image/upload/v1713191619/Screenshot_2024-04-15_213259_qzj5zo.png",
+      "https://previews.123rf.com/images/kraphix/kraphix2006/kraphix200600029/150368110-e-learning-online-education-concept-illustration-group-of-children-with-learning-activities-kids.jpg",
   },
   {
     id: "3",
     image:
-      "https://res.cloudinary.com/didw3mt8i/image/upload/v1713191774/Screenshot_2024-04-15_213550_uh8hxr.png",
+      "https://d1ng1bucl7w66k.cloudfront.net/ghost-blog/2021/11/Screen-Shot-2021-11-11-at-11.14.19-AM.png",
   },
 ];
 const Slider = () => {

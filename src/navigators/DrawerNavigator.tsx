@@ -6,6 +6,7 @@ import CustomDrawer from "../components/CustomDrawer";
 import FilterScreen from "../screens/FilterScreen";
 import DetailsScreen from "../screens/DetailsScreen";
 import DetailCourseScreen from "../screens/DetailCourseScreen";
+import ChapterScreen from "../screens/ChapterScreen";
 
 const DrawerNavigator = () => {
   const Drawer = createDrawerNavigator();

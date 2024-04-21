@@ -1,7 +1,6 @@
-import { StyleProp, View, ViewStyle } from "react-native";
+import { StyleProp, TouchableOpacity, View, ViewStyle } from "react-native";
 import React, { ReactNode } from "react";
 import { appColors } from "../constants/appColors";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { globalStyles } from "../style/globalStyles";
 interface Props {
   onPress?: () => void;

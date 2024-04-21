@@ -150,7 +150,7 @@ const FilterScreen = ({ navigation }: any) => {
           justify="space-between"
           styles={{ marginHorizontal: 20 }}
         >
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.navigate("Explore")}>
             <AntDesign name="arrowleft" size={30} color={appColors.text} />
           </TouchableOpacity>
           <TextComponent title text="Find Watch by Brand" />

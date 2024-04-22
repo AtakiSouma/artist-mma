@@ -96,7 +96,6 @@ const CustomDrawer = ({ navigation }: any) => {
           },
         });
       default:
-        console.log(":key", key);
         break;
     }
     navigation.closeDrawer();

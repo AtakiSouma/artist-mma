@@ -19,7 +19,6 @@ const AppRouter = () => {
   const auth = useAppSelector((state) => state.auth);
   const checkLogin = async () => {
     const res = await getItem();
-    console.log("response from Async storage", res);
     if (res) {
       const parsedRes = JSON.parse(res.toString());
       dispatch(loginSuccessAddAuth(parsedRes));
@@ -40,7 +39,7 @@ console.log("auth" , auth)
     <>
       {isShowSplash ? (
         <SplashScreen />
-      ) : auth.currentUser.email ? (
+      ) :auth.currentUser.email ? (
         <MainNavigator />
       ) : (
         <AuthNavigator />

@@ -40,7 +40,7 @@ const CardCourse = (props: Props) => {
       isShadow
       color={appColors.white2}
       styles={{ width: appInfo.sizes.WIDTH * 0.7 }}
-      onPress={() => navigation.navigate("DetailCourseScreen", { item })}
+      onPress={() => navigation.navigate("DetailCourseScreen", item._id)}
     >
       <ImageBackground
         style={{ flex: 1, marginBottom: 12, height: 131, padding: 5 }}

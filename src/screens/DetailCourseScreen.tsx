@@ -53,50 +53,61 @@ import {
 } from "../redux/slide/userSlice";
 import LottieView from "lottie-react-native";
 import { set } from "react-hook-form";
+import VideoTest from "../components/VideoTestComponent";
+import { isCancel } from "axios";
+import { fetchCourseDetailAsync } from "../redux/slide/useCourse";
+import courseApi from "../api/courseApi";
 const DetailCourseScreen = ({ route, navigation }: any) => {
-  const { item }: { item: Course } = route.params;
-  const [instructor, setInstructors] = useState<UserData>();
+  //  const { item }: { item: Course } = route.params;
+  const id = route.params;
+  // const { courseLoading, courseData } = useAppSelector((state) => state.course);
+  // console.log("courseLoaDING", courseLoading);
+  const dispatch = useAppDispatch();
+  const [courseData, setCourseData] = useState<Course>();
+  // useEffect(() => {
+  //   dispatch(fetchCourseDetailAsync(id));
+  // }, [id, dispatch]);
   const [courseIsBrought, setCourseIsBrought] = useState<Boolean>(false);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const dispatch = useAppDispatch();
   // TODO:
-
   //TODO: fetch data instructor
   const auth = useAppSelector((state) => state.auth);
   const user = useAppSelector((state) => state.user);
-  const fetchInstructorsData = async () => {
-    try {
-      const api = `/instructor/${item.instructor}`;
-      const res = await userApi.HandleUserApi(api, {}, "get");
-      setInstructors(res.data);
-    } catch (error) {
-      Alert.alert("Some thing went wrong in fetch Intructor");
-      console.log("error in intructor fetching ", error);
-    }
-  };
   const handleGetUserInfo = async () => {
-    dispatch(getUserInfoStart());
     try {
+      dispatch(getUserInfoStart());
+
       const api = `/${auth.currentUser.id}`;
       const res = await userApi.HandleUserApi(api, {}, "get");
       dispatch(getUserInfoSuccessAddAuth(res.data));
       const isCourseBought = user.userData.courses?.some(
-        (course) => course._id === item._id
+        (course) => course._id === courseData?._id
       );
+      console.log("isCourseBought", isCourseBought);
       setCourseIsBrought(isCourseBought);
     } catch (error) {
       console.log("error from fetching user info", error);
       dispatch(getUserInfoFailure());
     }
   };
+
   useFocusEffect(
     React.useCallback(() => {
-      handleGetUserInfo();
-      fetchInstructorsData();
-    }, [setInstructors, setCourseIsBrought])
+      // // dispatch(fetchCourseDetailAsync(id));
+      // handleGetUserInfo();
+      const handleGetCourseDetail = async () => {
+        try {
+          const api = `/course-detail/${id}`;
+          const response = await courseApi.HandleEvent(api, {}, "get");
+          setCourseData(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      handleGetCourseDetail();
+    }, [setCourseData,id])
   );
-
-  console.log("instructors", instructor);
+  console.log("user info ius buy course", courseIsBrought);
   // TODO:
   const [loading, setLoading] = useState(false);
   const handleCreateOrder = async () => {
@@ -107,7 +118,7 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
         api,
         {
           userId: auth.currentUser.id,
-          courseId: item._id,
+          courseId: courseData?._id,
           payment_info: {
             Visa_Card: "4242424242424242",
             MM_YY: "23/24",
@@ -135,7 +146,7 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
     const res = await paymentApi.HandlePaymentApi(
       api,
       {
-        amount: Math.floor(item.price * 100),
+        amount: Math.floor(courseData?.price ?? 600 * 100),
       },
       "post"
     );
@@ -166,8 +177,6 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
     // 4. If payment ok -> create the order
     handleCreateOrder();
   };
-
-  console.log("userData", user.userData);
   return (
     <View style={{ backgroundColor: "#F6F8FC", flex: 1 }}>
       <HeaderDetailScreen
@@ -214,14 +223,14 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
                   borderRadius: 10,
                 }}
                 url={
-                  item.thumbnail.url
-                    ? item.thumbnail.url
+                  courseData?.thumbnail.url
+                    ? courseData?.thumbnail.url
                     : "https://static.wikia.nocookie.net/houkai-star-rail/images/2/22/Profile_Picture_Sparkle_-_Illusion.png/revision/latest?cb=20240206032940"
                 }
               />
               <SectionComponent>
                 <TextComponent
-                  text={item.name || "no name"}
+                  text={courseData?.name || "no name"}
                   title
                   styles={{ fontWeight: "900" }}
                 />
@@ -236,7 +245,7 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
                       name="category"
                     />
                   }
-                  title={item.categories.title}
+                  title={courseData?.categories.title || ""}
                 />
                 <IconCard
                   icon={
@@ -247,7 +256,7 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
                       name="rotate-90-degrees-cw"
                     />
                   }
-                  title={item.level}
+                  title={courseData?.level || ""}
                 />
                 <IconCard
                   icon={
@@ -257,37 +266,44 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
                       color={appColors.primary}
                     />
                   }
-                  title={`${item.courseContentData.length} ${
-                    item.courseContentData.length > 0 ? "chapters" : "chapter"
+                  title={`${courseData?.courseContentData.length} ${
+                    courseData?.courseContentData.length || 10 > 0
+                      ? "chapters"
+                      : "chapter"
                   } `}
                 />
-                <StarComponent rate={item.ratings} totalReview={2} />
+                <StarComponent
+                  rate={courseData?.ratings || 5}
+                  totalReview={2}
+                />
               </SectionComponent>
               <SectionComponent>
                 <TextComponent title text={"Instructor"} />
                 <AvatarDetailScreen
                   url={
-                    instructor?.photoUrl
-                      ? instructor.photoUrl
+                    courseData?.instructor?.photoUrl
+                      ? courseData?.instructor.photoUrl
                       : "https://static.wikia.nocookie.net/houkai-star-rail/images/2/22/Profile_Picture_Sparkle_-_Illusion.png/revision/latest?cb=20240206032940"
                   }
-                  name={instructor?.name}
-                  email={instructor?.email}
+                  name={courseData?.instructor?.name}
+                  email={courseData?.instructor?.email}
                 />
               </SectionComponent>
               <SectionComponent>
                 <TextComponent title text={"Description"} />
-                <DescriptionComponent description={item.description} />
+                <DescriptionComponent
+                  description={courseData?.description || ""}
+                />
               </SectionComponent>
               <SectionComponent>
                 <TextComponent title text={"Video introduction"} />
-                <VideoComponent videoUrl={item.demoUrl} />
+                <VideoComponent videoUrl={courseData?.demoUrl || ""} />
               </SectionComponent>
 
               <SectionComponent>
                 <TextComponent title text={"Benefits"} />
                 <>
-                  {item.benefits.map((item, index) => (
+                  {courseData?.benefits.map((item, index) => (
                     <View key={item._id}>
                       <BenefitComponents
                         description={item.title}
@@ -308,7 +324,7 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
                 <TextComponent title text={"Prerequisites"} />
 
                 <>
-                  {item.prerequisites.map((item, index) => (
+                  {courseData?.prerequisites.map((item, index) => (
                     <View key={item._id}>
                       <BenefitComponents
                         description={item.title}
@@ -328,7 +344,7 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
               <SectionComponent>
                 <TextComponent title text={"Course Content"} />
                 <>
-                  {item.courseContentData.map((item, index) => (
+                  {courseData?.courseContentData.map((item, index) => (
                     <View key={item._id}>
                       <ChapterCard
                         data={item}
@@ -356,7 +372,9 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
                 onPress={courseIsBrought ? () => {} : onCheckout}
                 type="primary"
                 text={
-                  courseIsBrought ? "Study now" : `Enroll with ${item.price}$`
+                  courseIsBrought
+                    ? "Study now"
+                    : `Enroll with ${courseData?.price}$`
                 }
                 textStyles={{ fontSize: 100, fontWeight: "bold" }}
                 iconFlex="right"

@@ -13,3 +13,10 @@ export const showInfoToast = () => {
     text2: "You had been delete item to WishList Screen👋",
   });
 };
+export const showSucessToastCompleteChapter = () => {
+  Toast.show({
+    type: "success",
+    text1: "Successfully",
+    text2: "You have completed successfully",
+  });
+}

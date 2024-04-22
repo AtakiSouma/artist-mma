@@ -51,7 +51,6 @@ const SocialLogin = () => {
       dispatch(loginSuccessAddAuth(res.data));
        await AsyncStorage.setItem("auth", JSON.stringify(res.data));
       setIsLoading(false);
-      console.log("userinfo", userInfo);
     } catch (error) {
       setIsLoading(false);
       dispatch(loginFailure("Login Error"));

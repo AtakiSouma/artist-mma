@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CourseContent } from "../models/course.model";
 import VideoComponent from "../components/video/VideoComponents";
 import HeaderDetailScreen from "../components/HeaderDetailScreen";
@@ -22,16 +22,53 @@ import {
   MaterialIcons,
   FontAwesome,
   AntDesign,
+  Feather,
+  MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { appColors } from "../constants/appColors";
 import ClipBoardComponent from "../components/ClipBoard";
 import RowComponents from "../components/Global/RowComponents";
 import InputComponent from "../components/Input/InputComponents";
 import TextSectionComponent from "../components/TextSectionComponen";
+import { useAppSelector } from "../redux/hook";
+import progressAPI from "../api/progressApi";
+import {
+  showSuccessToast,
+  showSucessToastCompleteChapter,
+} from "../util/toast";
+import LoadingLogin from "../components/LoadingCompoent";
 const ChapterScreen = ({ route, navigation }: any) => {
-  const { item }: { item: CourseContent } = route.params;
+  const {
+    item,
+    isCompleted,
+    courseId,
+  }: { item: CourseContent; isCompleted: boolean; courseId: string } =
+    route.params; // Accept isCompleted prop
   const [question, setQuestion] = useState("");
   const [image, setImage] = useState("");
+  const auth = useAppSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
+  const handleCompleteChapter = async () => {
+    setLoading(true);
+    try {
+      const api = "/";
+      const data = {
+        courseId: courseId,
+        userId: auth.currentUser.id,
+        courseContentId: item._id,
+      };
+      console.log("data", data);
+      await progressAPI.HandleProgress(api, data, "post");
+      setLoading(false);
+      navigation.goBack();
+      showSucessToastCompleteChapter();
+    } catch (error) {
+      setLoading(false);
+
+      console.log(error);
+    }
+  };
+
   return (
     <View style={{ backgroundColor: "#F6F8FC", flex: 1 }}>
       <HeaderDetailScreen
@@ -89,35 +126,47 @@ const ChapterScreen = ({ route, navigation }: any) => {
             multiline
             placeholder="Your Question"
           />
-          <TouchableOpacity onPress={() => {}}>
-            <View style={{}}>
-              <Image
-                source={{
-                  uri: image
-                    ? image
-                    : "https://cdn.iconscout.com/icon/free/png-256/free-upload-30-83583.png",
-                }}
-                style={{ width: 100, height: 100, resizeMode: "cover" }}
-              />
-            </View>
-          </TouchableOpacity>
+          <RowComponents justify="flex-end">
+            <ButtonComponent
+              iconFlex="right"
+              styles={{ width: 130 }}
+              icon={
+                <FontAwesome name="send" size={20} color={appColors.white} />
+              }
+              text="Submit"
+              type="primary"
+            />
+          </RowComponents>
+        </SectionComponent>
+
+        <SpaceComponent height={50} />
+        <SectionComponent>
           <ButtonComponent
+            disable={isCompleted === true ? true : false}
             iconFlex="right"
-            styles={{ width: 130 }}
-            icon={<FontAwesome name="send" size={20} color={appColors.white} />}
-            text="Submit"
+            icon={
+              isCompleted === true ? (
+                <MaterialCommunityIcons
+                  name="timer-sand-complete"
+                  size={30}
+                  color={appColors.white}
+                />
+              ) : (
+                <Feather
+                  name="check-circle"
+                  size={30}
+                  color={appColors.white}
+                />
+              )
+            }
+            onPress={handleCompleteChapter}
+            text={isCompleted === true ? "You have completed" : "Complete"}
             type="primary"
           />
         </SectionComponent>
-
-        <SpaceComponent height={300} />
-        <SectionComponent>
-          <RowComponents>
-            <ButtonComponent text="Previous " type="primary" />
-            <ButtonComponent text="Next" type="primary" />
-          </RowComponents>
-        </SectionComponent>
       </ScrollView>
+
+      <LoadingLogin visible={loading} />
     </View>
   );
 };

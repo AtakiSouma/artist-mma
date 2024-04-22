@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 // IP of Nam
-const baseURL = "http://192.168.1.9:8888";
+const baseURL = "http://192.168.43.159:8888";
 
 const baseApi = axios.create({
   baseURL,

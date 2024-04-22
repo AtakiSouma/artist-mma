@@ -36,15 +36,13 @@ import WatchData, { WatchProps, feedBackData } from "../../data/watch";
 import CardItem from "../../components/CardItem";
 import Toast from "react-native-toast-message";
 import { showInfoToast, showSuccessToast } from "../../util/toast";
-import agent from "../../api/agent";
-import baseApi from "../../api/baseApi";
-import apiJWT from "../../api/apiJWT";
 import courseApi from "../../api/courseApi";
 import CardCourse from "../../components/Card/CardCourse";
 import InstructorData, { InstructorProps } from "../../data/instructos";
 import { isAnimationTerminatingCalculation } from "react-native-reanimated/lib/typescript/reanimated2/animation/springUtils";
 import InstructorsCard from "../../components/InstructorsCard";
 import CardProcessing from "../../components/Card/CardProcessing";
+import VideoTest from "../../components/VideoTestComponent";
 
 const HomeScreen = ({ navigation }: any) => {
   // const data: WatchProps[] = WatchData;
@@ -63,7 +61,6 @@ const HomeScreen = ({ navigation }: any) => {
   }, []);
   // TODO:Step:1: Initialize bookmarks
   const [bookmarks, setBookmarks] = useState<string[]>([]);
-  console.log(bookmarks);
   useFocusEffect(
     React.useCallback(() => {
       AsyncStorage.getItem("bookmarks")

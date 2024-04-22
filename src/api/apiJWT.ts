@@ -5,7 +5,8 @@ import baseApi from "./baseApi";
 import { useNavigation } from "@react-navigation/native";
 import queryString from 'query-string';
 
-const baseURL = "http://192.168.1.9:8888";
+// const baseURL = "http://192.168.43.159:8888";
+const baseURL = "http://192.168.1.9:8888"
 const axiosClient = axios.create({
   baseURL:baseURL,
   paramsSerializer: params => queryString.stringify(params),

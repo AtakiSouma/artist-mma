@@ -10,6 +10,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BuySuccessScreen from "../screens/BuySuccessScreen";
 import DetailCourseScreen from "../screens/DetailCourseScreen";
 import ChapterScreen from "../screens/ChapterScreen";
+import CourseDetailBought from "../screens/CourseDetailBought";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const MainNavigator = () => {
       <Stack.Screen name="SuccessScreen" component={BuySuccessScreen} />
       <Stack.Screen name="DetailCourseScreen" component={DetailCourseScreen} />
       <Stack.Screen name="ChapterScreen" component={ChapterScreen} />
+      <Stack.Screen name="CourseDetailScreenBought" component={CourseDetailBought} />
     </Stack.Navigator>
   );
 };

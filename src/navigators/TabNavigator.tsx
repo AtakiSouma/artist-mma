@@ -45,8 +45,8 @@ const TabNavigator = () => {
             case "Wishlist":
               icon = <FontAwesome name="heart" size={size} color={color} />;
               break;
-            case "Automatic":
-              icon = <Ionicons name="watch" size={size} color={color} />;
+            case "Order":
+              icon = <FontAwesome5 name="shopping-cart" size={size} color={color} />;
               break;
             case "Profile":
               icon = <FontAwesome name="user" size={size} color={color} />;
@@ -89,7 +89,7 @@ const TabNavigator = () => {
       <Tab.Screen name="Explore" component={HomeScreen} />
       <Tab.Screen name="Wishlist" component={WishListScreen} />
       <Tab.Screen name="Menu" component={MenuScreen} />
-      <Tab.Screen name="Automatic" component={CartScreen} />
+      <Tab.Screen name="Order" component={CartScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

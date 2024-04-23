@@ -1,7 +1,7 @@
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Course } from "../../models/course.model";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import CardComponents from "../CardComponents";
 import { appColors } from "../../constants/appColors";
 import { appInfo } from "../../constants/appInfos";
@@ -17,6 +17,9 @@ import {
 import TextComponent from "../Global/TextComponent";
 import SpaceComponent from "../Global/SpaceComponent.";
 import * as Progress from "react-native-progress";
+import { useAppSelector } from "../../redux/hook";
+import progressAPI from "../../api/progressApi";
+import { progressData } from "../../screens/CourseDetailBought";
 
 interface Props {
   item: Course;
@@ -27,7 +30,29 @@ interface Props {
   setIsBookmarked?: (value: boolean) => void;
   handleToggleBookMark?: any;
 }
+
 const CardProcessing = (props: Props) => {
+  const auth = useAppSelector((state) => state.auth);
+  const [progress, setProgress] = useState<progressData[]>();
+  // TODO:handle progress
+  const handleGetProgress = async () => {
+    try {
+      const api = "/get-progress";
+      const data = {
+        courseId: item._id,
+        userId: auth.currentUser.id,
+      };
+      const res = await progressAPI.HandleProgress(api, data, "post");
+      setProgress(res.data);
+    } catch (error) {
+      console.log("error fetching progress", error);
+    }
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      handleGetProgress();
+    }, [setProgress])
+  );
   const navigation: any = useNavigation();
   const {
     item,
@@ -37,6 +62,11 @@ const CardProcessing = (props: Props) => {
     isBookmarked,
     setIsBookmarked,
   } = props;
+  // console.log("progresslenght" , progress?.length)
+
+  const progressLength = progress?.length ?? 1 / item.courseContentData.length;
+  // console.log("Progress lenght", progressLength)
+  // console.log("item lenght" , item.courseContentData.length)
   return (
     <CardComponents
       isShadow
@@ -107,7 +137,7 @@ const CardProcessing = (props: Props) => {
         </RowComponents>
         <View style={{ marginTop: 2, marginLeft: 2 }}>
           <Progress.Bar
-            progress={0}
+            progress={progressLength}
             width={250}
             borderColor={appColors.buttonSecondary}
             color={appColors.primary}

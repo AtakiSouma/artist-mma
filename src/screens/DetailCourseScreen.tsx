@@ -58,56 +58,66 @@ import { isCancel } from "axios";
 import { fetchCourseDetailAsync } from "../redux/slide/useCourse";
 import courseApi from "../api/courseApi";
 const DetailCourseScreen = ({ route, navigation }: any) => {
-  //  const { item }: { item: Course } = route.params;
   const id = route.params;
-  // const { courseLoading, courseData } = useAppSelector((state) => state.course);
-  // console.log("courseLoaDING", courseLoading);
-  const dispatch = useAppDispatch();
+  console.log("id", id);
   const [courseData, setCourseData] = useState<Course>();
-  // useEffect(() => {
-  //   dispatch(fetchCourseDetailAsync(id));
-  // }, [id, dispatch]);
+
   const [courseIsBrought, setCourseIsBrought] = useState<Boolean>(false);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   // TODO:
   //TODO: fetch data instructor
   const auth = useAppSelector((state) => state.auth);
-  const user = useAppSelector((state) => state.user);
-  const handleGetUserInfo = async () => {
+  const [users, setUsers] = useState<UserData>();
+  const handleGetUserInfoV1 = async () => {
     try {
-      dispatch(getUserInfoStart());
-
       const api = `/${auth.currentUser.id}`;
-      const res = await userApi.HandleUserApi(api, {}, "get");
-      dispatch(getUserInfoSuccessAddAuth(res.data));
-      const isCourseBought = user.userData.courses?.some(
-        (course) => course._id === courseData?._id
-      );
-      console.log("isCourseBought", isCourseBought);
-      setCourseIsBrought(isCourseBought);
+      const res = await userApi.HandleUserApi(api, "get");
+      setUsers(res.data);
+      if (users?.courses) {
+        for (const course of users.courses) {
+          if (course._id === courseData?._id) {
+            setCourseIsBrought(true);
+            break;
+          } else {
+            setCourseIsBrought(false);
+          }
+        }
+      }
     } catch (error) {
       console.log("error from fetching user info", error);
-      dispatch(getUserInfoFailure());
     }
   };
-
   useFocusEffect(
     React.useCallback(() => {
-      // // dispatch(fetchCourseDetailAsync(id));
-      // handleGetUserInfo();
-      const handleGetCourseDetail = async () => {
-        try {
-          const api = `/course-detail/${id}`;
-          const response = await courseApi.HandleEvent(api, {}, "get");
-          setCourseData(response.data);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      handleGetCourseDetail();
-    }, [setCourseData,id])
+      handleGetUserInfoV1();
+    }, [route])
   );
-  console.log("user info ius buy course", courseIsBrought);
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const handleGetCourseDetail = async () => {
+  //       try {
+  //         const api = `/course-detail/${id}`;
+  //         const response = await courseApi.HandleEvent(api, {}, "get");
+  //         setCourseData(response.data);
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     };
+  //     handleGetCourseDetail();
+  //   }, [setCourseData, id, setUsers])
+  // );
+  React.useEffect(() => {
+    const handleGetCourseDetail = async () => {
+      try {
+        const api = `/course-detail/${id}`;
+        const response = await courseApi.HandleEvent(api, {}, "get");
+        setCourseData(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleGetCourseDetail();
+  }, [id]);
   // TODO:
   const [loading, setLoading] = useState(false);
   const handleCreateOrder = async () => {
@@ -129,7 +139,7 @@ const DetailCourseScreen = ({ route, navigation }: any) => {
         },
         "post"
       );
-      await handleGetUserInfo();
+      await handleGetUserInfoV1();
       setLoading(false);
       navigation.navigate("SuccessScreen");
       showSuccessToast();

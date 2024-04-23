@@ -101,7 +101,6 @@ const CourseDetailBought = ({ route, navigation }: any) => {
       handleGetProgress();
     }, [setProgress])
   );
-  console.log("item.courseContentData", item.courseContentData);
   const determineCompletionStatus = (contentId: string) => {
     return progress
       ? progress.some((item) => item.courseContentId === contentId)

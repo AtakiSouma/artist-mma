@@ -43,6 +43,8 @@ import { isAnimationTerminatingCalculation } from "react-native-reanimated/lib/t
 import InstructorsCard from "../../components/InstructorsCard";
 import CardProcessing from "../../components/Card/CardProcessing";
 import VideoTest from "../../components/VideoTestComponent";
+import progressAPI from "../../api/progressApi";
+import { progressData } from "../CourseDetailBought";
 
 const HomeScreen = ({ navigation }: any) => {
   // const data: WatchProps[] = WatchData;
@@ -110,6 +112,7 @@ const HomeScreen = ({ navigation }: any) => {
       setCourseBought(courseBought.data);
     } catch (error) {}
   };
+
   useFocusEffect(
     React.useCallback(() => {
       getAllCourseBoughtByUser();
@@ -162,7 +165,7 @@ const HomeScreen = ({ navigation }: any) => {
           <RowComponents>
             <RowComponents
               styles={{ flex: 1 }}
-              onPress={() => navigation.navigate("FilterCourseScreen",)}
+              onPress={() => navigation.navigate("FilterCourseScreen")}
             >
               <FontAwesome
                 name="search"
@@ -189,7 +192,7 @@ const HomeScreen = ({ navigation }: any) => {
               onPress={() =>
                 navigation.navigate("FilterCourseScreen", {
                   isFilter: true,
-                  item:courseData
+                  item: courseData,
                 })
               }
               bgColor={appColors.buttonBackground}
@@ -239,7 +242,9 @@ const HomeScreen = ({ navigation }: any) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           data={courseBought}
-          renderItem={({ item, index }) => <CardProcessing item={item} />}
+          renderItem={({ item, index }) => (
+            <CardProcessing item={item} />
+          )}
         />
         <TabBarComponent title="All Courses" onPress={() => {}} />
         <FlatList

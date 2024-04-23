@@ -11,6 +11,7 @@ import BuySuccessScreen from "../screens/BuySuccessScreen";
 import DetailCourseScreen from "../screens/DetailCourseScreen";
 import ChapterScreen from "../screens/ChapterScreen";
 import CourseDetailBought from "../screens/CourseDetailBought";
+import FilterCourseScreen from "../screens/FilterCourseScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,7 @@ const MainNavigator = () => {
       <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
       {/* <Stack.Screen name="FilterScreen" component={FilterScreen} /> */}
       {/* <Stack.Screen name="DetailScreen" component={DetailsScreen} /> */}
+      <Stack.Screen name="FilterCourseScreen" component={FilterCourseScreen} />
       <Stack.Screen name="SuccessScreen" component={BuySuccessScreen} />
       <Stack.Screen name="DetailCourseScreen" component={DetailCourseScreen} />
       <Stack.Screen name="ChapterScreen" component={ChapterScreen} />

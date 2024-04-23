@@ -162,11 +162,7 @@ const HomeScreen = ({ navigation }: any) => {
           <RowComponents>
             <RowComponents
               styles={{ flex: 1 }}
-              onPress={() =>
-                navigation.navigate("SearchEvents", {
-                  isFilter: false,
-                })
-              }
+              onPress={() => navigation.navigate("FilterCourseScreen",)}
             >
               <FontAwesome
                 name="search"
@@ -191,8 +187,9 @@ const HomeScreen = ({ navigation }: any) => {
             </RowComponents>
             <TagComponent
               onPress={() =>
-                navigation.navigate("FilterScreen", {
+                navigation.navigate("FilterCourseScreen", {
                   isFilter: true,
+                  item:courseData
                 })
               }
               bgColor={appColors.buttonBackground}

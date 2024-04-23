@@ -39,17 +39,7 @@ import ImageComponent from "../../components/ImageComponent";
 import formatDate from "../../util/formatDate";
 import IconCard from "../../components/detailScreen/IconCard";
 const CartScreen = ({ navigation }: any) => {
-  // const [bookmarks, setBookmarks] = useState<string[]>([]);
-  // useEffect(() => {
-  //   AsyncStorage.getItem("bookmarks")
-  //     .then((value) => {
-  //       if (value !== null) {
-  //         const bookmarksArray = JSON.parse(value);
-  //         setBookmarks(bookmarksArray);
-  //       }
-  //     })
-  //     .catch((error) => console.error("Error retrieving bookmarks: ", error));
-  // }, [bookmarks]);
+
   const [order, setOrder] = useState<OrderData[]>([]);
   const auth = useAppSelector((state) => state.auth);
   useFocusEffect(
@@ -74,6 +64,7 @@ const CartScreen = ({ navigation }: any) => {
       <ContainerComponent isImageBackground>
         <SpaceComponent height={40} />
         <View style={{ marginHorizontal: 15 }}>
+
           <InputComponent
             divider
             affix={
@@ -85,113 +76,95 @@ const CartScreen = ({ navigation }: any) => {
               />
             }
             value=""
-            onChange={() => {}}
-            // value={searchQuery}
-            // onChange={handleSearch}
+            onChange={() => { }}
+          // value={searchQuery}
+          // onChange={handleSearch}
           />
         </View>
         <>
-          {/* {filteredData.length === 0 ? (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-              }}
-            >
-              <LottieView
-                autoPlay
-                loop
-                style={{
-                  width: appInfo.sizes.WIDTH * 1,
-                  height: appInfo.sizes.HEIGHT * 1,
-                  backgroundColor: "transparent",
-                }}
-                // Find more Lottie files at https://lottiefiles.com/featured
-                source={require("../../assets/animations/no.json")}
-              />
-            </View>
-          ) : ( */}
+
           <FlatList
             contentContainerStyle={{ flexGrow: 1 }}
             nestedScrollEnabled={true}
             showsVerticalScrollIndicator={false}
             data={order}
-            renderItem={({ item, index }) => {
-              // const isBookmarked = bookmarks.includes(item.id.toString());
-              return (
-                <>
-                  <View
-                    style={{
-                      width: appInfo.sizes.WIDTH * 1,
-                      backgroundColor: appColors.white2,
-                      marginVertical: 2,
-                      overflow: "hidden",
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  // navigation.navigate("CourseDetailBought", { item });
+                }}
+              >
+                <View
+                  style={{
+                    width: appInfo.sizes.WIDTH * 1,
+                    backgroundColor: appColors.white2,
+                    marginVertical: 2,
+                    overflow: "hidden",
+                    borderBottomWidth: 2, 
+                    borderBottomColor: "#ddd", 
+                  }}
+                >
+                  <RowComponents
+                    justify="flex-start"
+                    styles={{
+                      alignItems: "center",
+                      alignContent: "center",
+                      marginTop: 16,
                     }}
                   >
-                    <RowComponents
-                      justify="flex-start"
-                      styles={{
-                        alignItems: "center",
-                        alignContent: "center",
-                        marginTop: 16,
+                    <ImageComponent
+                      url={item.courseId.thumbnail.url}
+                      stylesImage={{
+                        width: 180,
+                        height: 140,
+                        resizeMode: "cover",
+                        borderRadius: 10,
+                        overflow: "hidden",
                       }}
-                    >
-                      <ImageComponent
-                        url={item.courseId.thumbnail.url}
-                        stylesImage={{
-                          width: 150,
-                          height: 120,
-                          resizeMode: "cover",
-                          borderRadius: 10,
-                          overflow: "hidden",
-                        }}
-                      />
-                      <View style={{ display: "flex" }}>
-                        <RowComponents justify="flex-start">
-                          <FontAwesome5
-                            name="book-open"
-                            size={18}
-                            color={appColors.primary}
-                          />
-                          <SpaceComponent width={5} />
+                    />
+                    <View style={{ marginLeft: 10, maxWidth: '60%' }}>
+                      <RowComponents justify="flex-start">
+                        <FontAwesome5
+                          name="book-open"
+                          size={18}
+                          color={appColors.primary}
+                        />
+                        <SpaceComponent width={5} />
+                        <TextComponent
+                          text={item.courseId.name}
+                          styles={{ overflow: "hidden", flexWrap: 'wrap', maxWidth: '80%' }} // Cho phép xuống dòng khi quá dài
+                          numOfLine={5}
+                          size={17}
+                        />
+                      </RowComponents>
+                      <SpaceComponent height={10} />
+                      <RowComponents justify="flex-start">
+                        <Ionicons
+                          name="pricetags"
+                          size={20}
+                          color={appColors.primary}
+                        />
+                        <SpaceComponent width={5} />
+                        <TextComponent text={item.courseId.price} size={20} />
+                      </RowComponents>
+                      <SpaceComponent height={10} />
+                      <RowComponents justify="flex-start">
+                        <Fontisto
+                          name="date"
+                          size={20}
+                          color={appColors.primary}
+                        />
+                        <SpaceComponent width={5} />
+                        <TextComponent text={formatDate(item.createdAt)} />
+                      </RowComponents>
+                    </View>
+                  </RowComponents>
 
-                          <TextComponent
-                            text={item.courseId.name}
-                            styles={{ overflow: "hidden" }}
-                            numOfLine={2}
-                            size={17}
-                          />
-                        </RowComponents>
-                        <SpaceComponent height={10} />
-
-                        <RowComponents justify="flex-start">
-                          <Ionicons
-                            name="pricetags"
-                            size={20}
-                            color={appColors.primary}
-                          />
-                          <SpaceComponent width={5} />
-
-                          <TextComponent text={item.courseId.price} size={20} />
-                        </RowComponents>
-                        <SpaceComponent height={10} />
-
-                        <RowComponents justify="flex-start">
-                          <Fontisto
-                            name="date"
-                            size={20}
-                            color={appColors.primary}
-                          />
-                          <SpaceComponent width={5} />
-                          <TextComponent text={formatDate(item.createdAt)} />
-                        </RowComponents>
-                      </View>
-                    </RowComponents>
-                  </View>
-                </>
-              );
-            }}
+                </View>
+              </TouchableOpacity>
+            )}
           />
+
           {/* )} */}
         </>
       </ContainerComponent>
